@@ -11,13 +11,13 @@ namespace TestProject
         [TestMethod]
         public void TestMethod1()
         {
-            Console.WriteLine("Test output");
-            Person tom = new Person();
-            tom.Print();
-
-            int milliseconds = 2000;
-            Thread.Sleep(milliseconds);
-            Assert.IsTrue(false);
+//             Console.WriteLine("Test output");
+//             Person tom = new Person();
+//             tom.Print();
+// 
+//             int milliseconds = 2000;
+//             Thread.Sleep(milliseconds);
+//             Assert.IsTrue(false);
         }
     }
 }

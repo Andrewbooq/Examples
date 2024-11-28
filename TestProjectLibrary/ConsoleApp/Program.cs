@@ -7,15 +7,15 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Console.WriteLine("Test output");
-            Person tom = new Person();
-            //tom.Print();
-            tom.UseDictionary();
-            tom.GetHashCode();
+            Console.WriteLine("Measurement of access to element");
+            MeasureDictionaries measurement = new MeasureDictionaries();
 
-            int milliseconds = 2000;
-            Thread.Sleep(milliseconds);
+            measurement.UseStandardDictionary();
+            measurement.UseMyDictionary();
+
+            // Some time to observe results
+            //             int milliseconds = 2000;
+            //             Thread.Sleep(milliseconds);
         }
     }
 }
