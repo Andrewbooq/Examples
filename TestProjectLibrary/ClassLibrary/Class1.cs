@@ -13,7 +13,11 @@ namespace ClassLibrary
         private int capacity;
         public MyDictionary()
         {
-            _values = new LinkedList<KeyValuePair<TKey, UValue>>[15];
+            _values = new LinkedList<KeyValuePair<TKey, UValue>>[20];
+        }
+        public MyDictionary(int size)
+        {
+            _values = new LinkedList<KeyValuePair<TKey, UValue>>[size];
         }
         public int Count => _values.Length;
 
@@ -55,6 +59,7 @@ namespace ClassLibrary
             return _values[hash] == null ? default(UValue) :
                 _values[hash].First(m => m.Key.Equals(key)).Value;
         }
+
         public IEnumerator<KeyValuePair<TKey, UValue>> GetEnumerator()
         {
             return (from collections in _values
@@ -94,72 +99,67 @@ namespace ClassLibrary
     {
         private const int elementCount = 20;
 
-        public void UseStandardDictionary()
+        private void OutputResults(TimeSpan[] tests1, TimeSpan[] tests2)
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Standard Dictionary, ms | ms My Dictionary");
+
+            TimeSpan average1 = new TimeSpan(0);
+            TimeSpan average2 = new TimeSpan(0);
+            for (int i = 0; i < elementCount; ++i)
+            {
+                Console.WriteLine("               {0} | {1}", tests1[i].ToString("\\.fffffff"), tests2[i].ToString("\\.fffffff"));
+                average1 += tests1[i];
+                average2 += tests2[i];
+            }
+            Console.WriteLine($"          AVG: {(average1/elementCount).ToString("\\.fffffff")} | {(average2/elementCount).ToString("\\.fffffff")} :AVG");
+        }
+
+        public void TestDictionary()
         {
             Console.WriteLine($"Dictionary, capacity={elementCount}");
             
-            var dictionary = new Dictionary<Identifier, string>(elementCount);
+            // Standard Dictionary
+            var dictionary1 = new Dictionary<Identifier, string>(elementCount);
 
             for (int i = 0; i < elementCount; ++i)
             {
                 Identifier key = new Identifier(i);
-                dictionary.Add(key, $"some string {i}");
+                dictionary1.Add(key, $"some string {i}");
             }
 
-            string value1;
-            Identifier key1 = new Identifier(2);
-            Stopwatch stopWatch1 = Stopwatch.StartNew();
-            value1 = dictionary[key1];
-            Console.WriteLine($"Time to get element at the beginig {stopWatch1.Elapsed}");
-            Console.WriteLine($"value={value1}");
-
-            string value2;
-            Identifier key2 = new Identifier(13);
-            Stopwatch stopWatch2 = Stopwatch.StartNew();
-            value2 = dictionary[key2];
-            Console.WriteLine($"Time to get element in the middle {stopWatch2.Elapsed}");
-            Console.WriteLine($"value={value2}");
-
-            string value3;
-            Identifier key3 = new Identifier(19);
-            Stopwatch stopWatch3 = Stopwatch.StartNew();
-            value3 = dictionary[key3];
-            Console.WriteLine($"Time to get element at the end {stopWatch3.Elapsed}");
-            Console.WriteLine($"value={value3}");
-        }
-
-        public void UseMyDictionary()
-        {
-            Console.WriteLine($"MyDictionary, capacity={elementCount}");
-
-            var dictionary = new MyDictionary<Identifier, string>();
+            TimeSpan[] tests1 = new TimeSpan[elementCount];
+            string[] strings1 = new string[elementCount];
 
             for (int i = 0; i < elementCount; ++i)
             {
                 Identifier key = new Identifier(i);
-                dictionary.Add(key, $"some string {i}");
+                Stopwatch stopWatch = Stopwatch.StartNew();
+                strings1[i] = dictionary1[key];
+                tests1[i] = stopWatch.Elapsed;
             }
 
-            string value1;
-            Identifier key1 = new Identifier(2);
-            Stopwatch stopWatch1 = Stopwatch.StartNew();
-            value1 = dictionary[key1];
-            Console.WriteLine($"Time to get element at the beginig {stopWatch1.Elapsed}");
-            Console.WriteLine($"value={value1}");
+            // My implementation of Dictionary
+            var dictionary2 = new MyDictionary<Identifier, string>(elementCount);
 
-            string value2;
-            Identifier key2 = new Identifier(13);
-            Stopwatch stopWatch2 = Stopwatch.StartNew();
-            value2 = dictionary[key2];
-            Console.WriteLine($"Time to get element in the middle {stopWatch2.Elapsed}");
-            Console.WriteLine($"value={value2}");
+            for (int i = 0; i < elementCount; ++i)
+            {
+                Identifier key = new Identifier(i);
+                dictionary2.Add(key, $"some string {i}");
+            }
 
-            string value3;
-            Identifier key3 = new Identifier(19);
-            Stopwatch stopWatch3 = Stopwatch.StartNew();
-            value3 = dictionary[key3];
-            Console.WriteLine($"Time to get element at the end {stopWatch3.Elapsed}");
-            Console.WriteLine($"value={value3}");
+            TimeSpan[] tests2 = new TimeSpan[elementCount];
+            string[] strings2 = new string[elementCount];
+
+            for (int i = 0; i < elementCount; ++i)
+            {
+                Identifier key = new Identifier(i);
+                Stopwatch stopWatch = Stopwatch.StartNew();
+                strings2[i] = dictionary2[key];
+                tests2[i] = stopWatch.Elapsed;
+            }
+
+            OutputResults(tests1, tests2);
         }
     }
 }
